@@ -4,9 +4,10 @@ import { TextInput, IconButton, Button, Stack } from "@react-native-material/cor
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useState } from "react";
 import { TouchableOpacity } from "react-native-web";
+import { authLogin } from "../utils/auth";
 
 
-const Login = ({navigation}) => {
+const Login = ({navigation, route}) => {
     const [hidePassword, setShowPassword] = useState(true)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -43,7 +44,25 @@ const Login = ({navigation}) => {
             />
         <Button
         title="Entrar"
-        onPress={() => console.log('entrou')}
+        onPress={
+            async () => {
+                if(email !== "" && password !== "") {
+                    try{
+                        const result = await authLogin(route.params.firebaseApp, email, password)
+                        route.params.setIsLoggedIn(true)
+
+                    }
+                    catch(err) {
+                        console.log(err)
+                        alert('Login inválido')
+                    }
+                }
+                else {
+                    alert('Todos os campos devem ser preenchidos')
+                }
+            }}
+        
+            
         leading={(props) => <Icon name="send" {...props} />}
         style={{
             paddingTop: '10px',

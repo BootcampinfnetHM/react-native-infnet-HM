@@ -5,11 +5,12 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useState } from "react";
 import { TouchableOpacity } from "react-native-web";
 
+import { authRegister } from "../utils/auth";
 
-const Register = () => {
+const Register = ({navigation, route}) => {
     const [hidePassword, setShowPassword] = useState(true)
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [emailText, setEmail] = useState('')
+    const [passwordText, setPassword] = useState('')
 
 
     return (
@@ -24,7 +25,7 @@ const Register = () => {
             <TextInput
             label="E-mail"
             leading={props => <Icon name="account" {...props} />}
-            value={email}
+            value={emailText}
             onChange={(e) => setEmail(e.target.value)}
             />
            <TextInput
@@ -39,11 +40,28 @@ const Register = () => {
                 onPress={() => setShowPassword(!hidePassword)}
                 />
               )}
-              value={password}
+              value={passwordText}
             />
         <Button
         title="Registrar"
-        onPress={() => console.log('Registrou')}
+        onPress={
+            async () => {
+                if(emailText !== "" && passwordText !== "") {
+                    try{
+                        const result = await authRegister(route.params.firebaseApp, emailText, passwordText)
+                        route.params.setIsLoggedIn(true)
+
+                    }
+                    catch(err) {
+                        console.log(err)
+                        alert('Dados inválidos')
+                    }
+                }
+                else {
+                    alert('Todos os campos devem ser preenchidos')
+                }
+            }
+        }
         leading={(props) => <Icon name="send" {...props} />}
         style={{
             paddingTop: '10px',
