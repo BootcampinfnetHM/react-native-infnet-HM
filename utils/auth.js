@@ -1,5 +1,13 @@
 import { signInWithEmailAndPassword, getAuth, createUserWithEmailAndPassword } from "firebase/auth"
-import { storageData, clearStorage } from "./storage"
+import { storageData, clearStorage, getData } from "./storage"
+
+
+const reauthenticate = async (app) => {
+    const user = await getData("user")
+    await authLogin(app, user.emailText, user.passwordText)
+}
+
+
 const userIsLoggedIn = async () => {
     return true
 }
@@ -11,11 +19,12 @@ const authLogin = async (firebaseApp, emailText, passwordText) => {
         const result = await signInWithEmailAndPassword(auth, emailText, passwordText)
 
         storageData('user', {
-            displayName: result.user.displayName ,
-            email: result.user.email,
-            phoneNumber: result.user.phoneNumber,
-            photoUrl: result.user.photoUrl,
-            uid: result.user.uid,
+            emailText,
+            passwordText,
+            // displayName,
+            // phoneNumber,
+            // photoUrl,
+            // uid
         })
         }
         catch(err){
@@ -30,11 +39,11 @@ const authRegister = async (firebaseApp, emailText, passwordText) => {
         const result = await createUserWithEmailAndPassword(auth, emailText, passwordText)
 
         storageData('user', {
-            displayName: result.user.displayName ,
-            email: result.user.email,
-            phoneNumber: result.user.phoneNumber,
-            photoUrl: result.user.photoUrl,
-            uid: result.user.uid,
+            email,
+            phoneNumber,
+            photoUrl,
+            uid,
+            passwordText,
         })
 
         console.log(result)
@@ -51,6 +60,7 @@ const authLogout = async (emailText, passwordText) => {
 }
 
 export {
+    reauthenticate,
     userIsLoggedIn,
     authLogin,
     authRegister,

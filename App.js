@@ -18,7 +18,7 @@ const Tab = createBottomTabNavigator()
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { IconButton } from '@react-native-material/core';
-import { authLogout } from './utils/auth';
+import { authLogout, reauthenticate } from './utils/auth';
 
 
 const firebaseConfig = {
@@ -35,8 +35,6 @@ const firebaseApp = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(firebaseApp);
 
 
-
-
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
@@ -44,19 +42,18 @@ export default function App() {
     const user =  await getData("user")
     
     if(user !== null) {
-     setIsLoggedIn(true)
+      
+
+      setIsLoggedIn(true)
     }
   }
 
   useEffect(() => {
+    reauthenticate()
     verifyLogin()
   }, [])
 
-  const chamar = async () => {
-    console.log(await getData('user'))
-  }
-
-  chamar()
+ 
 
   return (
 
@@ -107,6 +104,10 @@ export default function App() {
         <Tab.Screen
         name="Profile"
         component={Profile}
+        initialParams={{
+          firebaseApp,
+          setIsLoggedIn
+        }}
         options={{
           title: 'Perfil',
           headerRight: () => {

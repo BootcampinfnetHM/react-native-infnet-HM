@@ -9,8 +9,8 @@ import { authLogin } from "../utils/auth";
 
 const Login = ({navigation, route}) => {
     const [hidePassword, setShowPassword] = useState(true)
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [emailText, setEmail] = useState('')
+    const [passwordText, setPassword] = useState('')
 
 
     return (
@@ -24,12 +24,14 @@ const Login = ({navigation, route}) => {
         >
             <TextInput
             label="E-mail"
+            variant="outlined"
             leading={props => <Icon name="account" {...props} />}
-            value={email}
+            value={emailText}
             onChange={(e) => setEmail(e.target.value)}
             />
            <TextInput
             label="Senha"
+            variant="outlined"
             leading={props => <Icon name="lock" {...props}/>}
             secureTextEntry={hidePassword}
             onChange={(e) => setPassword(e.target.value)}
@@ -40,29 +42,29 @@ const Login = ({navigation, route}) => {
                 onPress={() => setShowPassword(!hidePassword)}
                 />
               )}
-              value={password}
+              value={passwordText}
             />
         <Button
         title="Entrar"
         onPress={
             async () => {
-                if(email !== "" && password !== "") {
+                if(emailText !== "" && passwordText !== "") {
                     try{
-                        const result = await authLogin(route.params.firebaseApp, email, password)
+                        const result = await authLogin(route.params.firebaseApp, emailText, passwordText)
                         route.params.setIsLoggedIn(true)
 
                     }
                     catch(err) {
                         console.log(err)
-                        alert('Login inválido')
+                        alert('Dados inválidos')
                     }
                 }
                 else {
                     alert('Todos os campos devem ser preenchidos')
                 }
-            }}
+            }
+        }
         
-            
         leading={(props) => <Icon name="send" {...props} />}
         style={{
             paddingTop: '10px',

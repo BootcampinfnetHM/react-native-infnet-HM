@@ -23,7 +23,9 @@
     "react-dom": "^18.2.0",
     "react-native": "0.70.5",
     "react-native-web": "^0.18.10",
-    "react-navigation": "^4.4.4"
+    "react-navigation": "^4.4.4",
+    "expo-notifications": "~0.17.0",
+    "expo-permissions": "~14.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
