@@ -7,6 +7,8 @@ import { TouchableOpacity } from "react-native-web";
 
 import { authRegister } from "../utils/auth";
 
+import {storeData} from "../utils/storage"
+
 const Register = ({navigation, route}) => {
     const [hidePassword, setShowPassword] = useState(true)
     const [emailText, setEmail] = useState('')
@@ -46,6 +48,7 @@ const Register = ({navigation, route}) => {
         title="Registrar"
         onPress={
             async () => {
+                
                 if(emailText !== "" && passwordText !== "") {
                     try{
                         const result = await authRegister(route.params.firebaseApp, emailText, passwordText)

@@ -49,8 +49,9 @@ export default function App() {
   }
 
   useEffect(() => {
-    reauthenticate()
+    initializeApp(firebaseConfig)
     verifyLogin()
+    // reauthenticate()
   }, [])
 
  
@@ -80,6 +81,7 @@ export default function App() {
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'slateblue'  
       })}
+      initialRouteName="Profile"
       >
         <Tab.Screen
         name="Home"

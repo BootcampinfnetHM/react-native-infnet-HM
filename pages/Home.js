@@ -15,8 +15,7 @@ const Home = () => {
             setMinute(25)
             setSeconds(0)
     }
-
-
+    
     const initiPomodoro = () => {
         setStartPomodoro(true)
         let countMin = 24
@@ -44,6 +43,12 @@ const Home = () => {
     useEffect(() => {
         
     }, [])
+
+    // useEffect(() => {
+    //     initializeApp(firebaseConfig)
+    //     verifyLogin()
+    //     // reauthenticate()
+    //   }, [])
 
     return (
         <View

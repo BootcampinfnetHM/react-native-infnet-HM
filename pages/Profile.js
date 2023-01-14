@@ -1,18 +1,19 @@
 import { getData } from "../utils/storage"
-import { update, updateProfile } from "../utils/user"
-import { TextInput, IconButton, Button, Stack, Avatar, Snackbar, } from "@react-native-material/core";
+import { update } from "../utils/user"
+import { TextInput, IconButton, Button, Stack, Avatar, Snackbar, FAB, } from "@react-native-material/core";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { View } from "react-native-web";
 import { useState, useEffect } from 'react';
-
+import { PickImage } from "../utils/image";
 
 
 const Profile = ({route}) => {
     const [emailText, setEmail] = useState('')
-    const [displayName, setDisplayName] = useState('')
-    const [phoneNumber, setPhoneNumber] = useState('')
+    const [displayName, setDisplayName] = useState([])
+    const [phoneNumber, setPhoneNumber] = useState([])
     const [photoUrl, setPhotoUrl] = useState('')
     const [snackBarckShow, setSnackBarShow] = useState(false)
+    const [loading, setLoading] = useState(false)
     
     const dadosAtuais = async () => {
         let user = await getData("user")
@@ -21,25 +22,40 @@ const Profile = ({route}) => {
         setPhoneNumber(user.phoneNumber)
     }
 
- 
+    const uploadPhoto = async () => {
+        const image = await PickImage()
+        setPhotoUrl(image)
+    }
 
     useEffect(() => {
         dadosAtuais()
     })
 
     return (
-        <Stack
-        direction="column"
+        <View
         style={{
+            alignSekf: 'stretch',
             justifyContent: 'center',
+            alignItems: 'center',
             height: '100%',
             padding: '20px'
         }}
         >
-            <Avatar 
-            size={120}
-            image={{ uri: '' }}
-            />
+            <View>
+                <Avatar
+                style={{margin: 'auto'}} 
+                size={120}
+                image={{ uri: photoUrl ? photoUrl : '' }}
+                />
+
+                <FAB
+                color='primary'
+                style={{width: '55px', position: 'absolute', bottom: 0, right:0 }}
+                onPress={uploadPhoto}
+                icon={(props) => <Icon name="camera" {...props}/>}
+                >
+                </FAB>
+            </View>
 
             <TextInput
             style={{marginTop: '20px'}}
@@ -68,11 +84,19 @@ const Profile = ({route}) => {
         title="Editar Perfil"
         onPress={
             async () => {  
-               await update(route.params.firebaseApp, {emailText, displayName, phoneNumber}) 
-               setSnackBarShow(true)     
+                setLoading(true)
+                await update(route.params.firebaseApp, {
+                    emailText,
+                    displayName,
+                    phoneNumber,
+                    photoUrl
+                }) 
+                setLoading(false)
+                setSnackBarShow(true)     
             }
         }
         leading={(props) => <Icon name="pencil" {...props} />}
+        loading={loading}
         style={{
             paddingTop: '10px',
             paddingBottom: '10px',
@@ -93,7 +117,7 @@ const Profile = ({route}) => {
             ("")
         }</>
             
-        </Stack>
+        </View>
     )
 }
 

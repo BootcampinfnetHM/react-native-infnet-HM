@@ -1,5 +1,7 @@
 import { signInWithEmailAndPassword, getAuth, createUserWithEmailAndPassword } from "firebase/auth"
-import { storageData, clearStorage, getData } from "./storage"
+import { storeData, clearStorage, getData } from "./storage"
+
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 
 const reauthenticate = async (app) => {
@@ -13,22 +15,22 @@ const userIsLoggedIn = async () => {
 }
 
 const authLogin = async (firebaseApp, emailText, passwordText) => {
-    const auth = getAuth(firebaseApp)
-
     try{
+        const auth = getAuth(firebaseApp)
         const result = await signInWithEmailAndPassword(auth, emailText, passwordText)
+        // console.log(result)
 
-        storageData('user', {
+        storeData('user', {
             emailText,
             passwordText,
             // displayName,
-            // phoneNumber,
+            // phoneNumber,    
             // photoUrl,
             // uid
-        })
+        }) 
         }
         catch(err){
-            throw err
+            console.log(err)
         }
 }
 
@@ -38,11 +40,11 @@ const authRegister = async (firebaseApp, emailText, passwordText) => {
     try{
         const result = await createUserWithEmailAndPassword(auth, emailText, passwordText)
 
-        storageData('user', {
-            email,
-            phoneNumber,
-            photoUrl,
-            uid,
+        storeData('user', {
+            emailText,
+            // phoneNumber,
+            // photoUrl,
+            // uid,
             passwordText,
         })
 

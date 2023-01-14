@@ -51,6 +51,7 @@ const Login = ({navigation, route}) => {
                 if(emailText !== "" && passwordText !== "") {
                     try{
                         const result = await authLogin(route.params.firebaseApp, emailText, passwordText)
+
                         route.params.setIsLoggedIn(true)
 
                     }
